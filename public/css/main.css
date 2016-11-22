@@ -1,0 +1,26 @@
+ul.ui-group-list,
+ul.ui-group-list > li {
+    list-style-type: none;
+    list-style-position:inside;
+    margin: 0;
+    padding: 0;
+}
+ul.ui-group-list > li:hover {
+    background-color: #46b8da;
+}
+
+a.ui-btn-add-group {
+    color: #4cad73;
+}
+
+.in-group {
+    color: #41ec52;
+}
+
+.not-in-group {
+    color: #da0620;
+}
+
+a.ui-btn-remove-group {
+    color: #ad6a5c;
+}
