@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {debounce} from 'lodash'
+import './SuggestionBox.css';
 
 class SuggestionBox extends Component {
     constructor(props) {
@@ -8,40 +9,50 @@ class SuggestionBox extends Component {
             msBeforeQuery: 500,
             miniSearchLength: 3,
             // lastModifiedTime: -1,
-            suggestionResults: []
+            suggestionResults: [],
+            loading: false,
+            oldSearchString: ''
         };
     }
-    debounceTypeHandler(){
+
+    debounceTypeHandler() {
         var debounceFunc;
-        if (!this.state.debounceFunc){
+        if (!this.state.debounceFunc) {
             debounceFunc = debounce(this._search.bind(this), 1000, {});
-            this.setState({
-                debounceFunc: debounceFunc
-            });
         }
         if (debounceFunc) debounceFunc();
         else this.state.debounceFunc();
 
     }
-    _search(){
-        console.log('_search!!');
+
+    _search() {
+        this.setState({
+            loading: true,
+            suggestionResults: []
+        });
 
         this.props.searchFunc(this.props.searchString)
             .then((result) => {
-                return self.setState({
+                this.setState({loading: false});
+                return this.setState({
                     suggestionResults: result
                 });
             })
             .catch((err) => {
+                this.setState({loading: false});
                 console.error('An error occured : ', err);
             });
     }
+
     onSuggestionClick = (e) => {
         console.log('suggestion click', e);
-        this.props.onSuggestionClick(e.target.attributes["data-targetuser"].value);
-    }
+        this.props.onSuggestionClick(this.props.name, e.target.attributes["data-targetuser"].value);
+    };
+
     componentWillReceiveProps(nextProps) {
-        console.log('WillReceiveProps Call : ', nextProps);
+        console.log('WillReceiveProps Call : ', nextProps.searchString, this.props.searchString);
+
+        if (nextProps.searchString === this.state.oldSearchString) return;
         // var lastModifiedTime = Date.now();
         // if (nextProps.searchString.length < this.state.miniSearchLength) return;
 
@@ -49,24 +60,58 @@ class SuggestionBox extends Component {
         //     console.log('Sending new Query with value : ' + nextProps.searchString);
         //     if (this._search(nextProps.searchString, )
         // }
-        this.debounceTypeHandler();
+        if (nextProps.searchString.length >= this.state.miniSearchLength) {
+            this.debounceTypeHandler();
+        }
 
         // return this.setState({lastModifiedTime: lastModifiedTime});
     }
+
     onBlur = (e) => {
         console.log('loosing focus ! launching search !');
         this.props.onSearchedText(this.props.name, e.target.value);
     }
+
+    _renderEmpty() {
+        return null;
+    }
+
+    _renderTypeMore() {
+        return <div className='suggestion-message'>Type at least <b>{this.state.miniSearchLength}</b> charaters to get
+            suggesions.<br/>Search string : {this.props.searchString}</div>
+    }
+
+    _renderNoResults() {
+        return <div className='suggestion-message'>No result found for <b>{this.props.searchString}</b>...</div>
+    }
+
+    _renderLoading() {
+        return (
+            <div>
+                <span className="loader"></span>
+                Searching for <b>{this.props.searchString}</b>...
+            </div>
+        );
+    }
+
     render() {
+        if (this.props.visible === false) return null;
+        if (this.props.searchString.length <= this.state.miniSearchLength) return this._renderTypeMore();
+        if (this.state.loading) return this._renderLoading();
+        if (this.state.suggestionResults.length === 0) return this._renderNoResults();
+
         var list = [];
-        for (var i=0;i<this.state.suggestionResults.length;i++){
-            var suggestion = this.state.suggestionResults[i];
-            var suggestedText = suggestion.samAccountName;
-            suggestedText += ' (';
-            if (suggestion.givenName !== 'null') suggestedText += suggestion.givenName;
-            if (suggestion.surname !== 'null') suggestedText += ' ' + suggestion.surname;
-            suggestedText += ')';
-            console.log('building suggestedText, ', suggestedText);
+        for (var i = 0; i < this.state.suggestionResults.length; i++) {
+            let suggestion = this.state.suggestionResults[i];
+            let suggestedText = '';
+            if (suggestion.givenName !== null) suggestedText += suggestion.givenName;
+            if (suggestion.surname !== null) suggestedText += ' ' + suggestion.surname;
+            if (suggestedText.length > 0) {
+                suggestedText = suggestion.samAccountName + ' (' + suggestedText + ')';
+            } else {
+                suggestedText = suggestion.samAccountName;
+            }
+            // console.log('building suggestedText, ', suggestedText);
             list.push(<li
                 onClick={this.onSuggestionClick}
                 data-targetuser={suggestion.samAccountName}>
@@ -75,7 +120,9 @@ class SuggestionBox extends Component {
         }
         return (
             <div>
-                Suggestions de recherche pour : {this.props.searchString} ...
+                <div className='suggestion-message'>
+                    Suggestions de recherche pour : <b>{this.props.searchString}</b> ...
+                </div>
                 <br/>
                 <ul>
                     {list}
@@ -83,7 +130,8 @@ class SuggestionBox extends Component {
             </div>
         );
     }
-};
+}
+;
 
 
 export default SuggestionBox;
