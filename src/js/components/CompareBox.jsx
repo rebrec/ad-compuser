@@ -21,7 +21,7 @@ function alphabetical(a, b)
 class CompareBox  extends Component{
     constructor(props) {
         super(props);
-        console.log('getinitialState');
+        // console.log('getinitialState');
         this.state = {
             displayMode: this.props.displayMode || '3pans', // 'table', 'diffmode?'
             user1: this.props.user1.user,
@@ -32,7 +32,7 @@ class CompareBox  extends Component{
         };
     }
     componentWillReceiveProps(nextProps) {
-        console.log('WillReceiveProps Call : ', nextProps);
+        // console.log('WillReceiveProps Call : ', nextProps);
         this.setState({
             displayMode: nextProps.displayMode || '3pans', // 'table', 'diffmode?'
             user1: nextProps.user1.user,
@@ -54,7 +54,7 @@ class CompareBox  extends Component{
 
                 targetList[group.samAccountName] = group;
                 // newList[group.samAccountName] = group;
-                console.log('Successfully added ' + user + ' to group ' + group.samAccountName);
+                // console.log('Successfully added ' + user + ' to group ' + group.samAccountName);
                 var newState = {};
                 Object.assign(newState, targetList);
                 this.setState(newState);
@@ -73,7 +73,7 @@ class CompareBox  extends Component{
 
                 delete targetList[group.samAccountName];
                 // newList[group.samAccountName] = group;
-                console.log('Successfully added ' + user + ' to group ' + group.samAccountName);
+                // console.log('Successfully added ' + user + ' to group ' + group.samAccountName);
                 var newState = {};
                 Object.assign(newState, targetList);
                 this.setState(newState);

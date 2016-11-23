@@ -22,3 +22,7 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+ul.ui-suggestion-list > li:hover {
+    background-color: #46b8da;
+}

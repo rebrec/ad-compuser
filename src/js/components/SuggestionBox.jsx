@@ -10,8 +10,7 @@ class SuggestionBox extends Component {
             miniSearchLength: 3,
             // lastModifiedTime: -1,
             suggestionResults: [],
-            loading: false,
-            oldSearchString: ''
+            loading: false
         };
     }
 
@@ -52,7 +51,8 @@ class SuggestionBox extends Component {
     componentWillReceiveProps(nextProps) {
         console.log('WillReceiveProps Call : ', nextProps.searchString, this.props.searchString);
 
-        if (nextProps.searchString === this.state.oldSearchString) return;
+        if (nextProps.searchString === this.props.searchString) return;
+        console.log('doing something else...');
         // var lastModifiedTime = Date.now();
         // if (nextProps.searchString.length < this.state.miniSearchLength) return;
 
@@ -88,15 +88,17 @@ class SuggestionBox extends Component {
     _renderLoading() {
         return (
             <div>
-                <span className="loader"></span>
+                <div className="loader" style={{display:'inline-block'}}></div>
+
                 Searching for <b>{this.props.searchString}</b>...
             </div>
         );
     }
 
     render() {
+        console.log('SuggestionBox : rendering.... ', this.props, this.state);
         if (this.props.visible === false) return null;
-        if (this.props.searchString.length <= this.state.miniSearchLength) return this._renderTypeMore();
+        if (this.props.searchString.length < this.state.miniSearchLength) return this._renderTypeMore();
         if (this.state.loading) return this._renderLoading();
         if (this.state.suggestionResults.length === 0) return this._renderNoResults();
 
@@ -124,7 +126,7 @@ class SuggestionBox extends Component {
                     Suggestions de recherche pour : <b>{this.props.searchString}</b> ...
                 </div>
                 <br/>
-                <ul>
+                <ul className="ui-suggestion-list">
                     {list}
                 </ul>
             </div>
