@@ -52,7 +52,7 @@ class SuggestionBox extends Component {
         console.log('WillReceiveProps Call : ', nextProps.searchString, this.props.searchString);
 
         if (nextProps.searchString === this.props.searchString) return;
-        console.log('doing something else...');
+        this.setState({loading: true});
         // var lastModifiedTime = Date.now();
         // if (nextProps.searchString.length < this.state.miniSearchLength) return;
 

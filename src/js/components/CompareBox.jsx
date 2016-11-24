@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 // import {alphabetical} from 'helperfuncs';
-import './index.css';
+import './CompareBox.css';
 
 
 function alphabetical(a, b)
@@ -233,26 +233,26 @@ class CompareBox  extends Component{
             row.push(<td>{samAccountName}</td>);
             if (groupList1.indexOf(samAccountName) >= 0) {
                 row.push(
-                    <td className="text-center"><span className="in-group glyphicon glyphicon-ok"
+                    <td key={"add1" + samAccountName} className="text-center"><span className="in-group glyphicon glyphicon-ok"
                                                       onClick={this.removeUser1FromGroup}
                                                       title={ "Remove " + this.state.user1 + " from group " + samAccountName}
                                                       data-targetgroup={jsonGroup}> </span></td>);
             } else {
                 row.push(
-                    <td className="text-center"><span className="not-in-group glyphicon glyphicon-remove"
+                    <td key={"remove1" + samAccountName} className="text-center"><span className="not-in-group glyphicon glyphicon-remove"
                                                       onClick={this.addUser1ToGroup}
                                                       title={ "Add " + this.state.user1 + " to group " + samAccountName}
                                                       data-targetgroup={jsonGroup}> </span></td>);
             }
             if (groupList2.indexOf(samAccountName) >= 0) {
                 row.push(
-                    <td className="text-center"><span className="in-group glyphicon glyphicon-ok"
+                    <td key={"remove2" + samAccountName} className="text-center"><span className="in-group glyphicon glyphicon-ok"
                                                       onClick={this.removeUser2FromGroup}
                                                       title={ "Remove " + this.state.user2 + " from group " + samAccountName}
                                                       data-targetgroup={jsonGroup}> </span></td>);
             } else {
                 row.push(
-                    <td className="text-center"><span className="not-in-group glyphicon glyphicon-remove"
+                    <td key={"remove2" + samAccountName}  className="text-center"><span className="not-in-group glyphicon glyphicon-remove"
                                                       onClick={this.addUser2ToGroup}
                                                       title={ "Add " + this.state.user2 + " to group " + samAccountName}
                                                       data-targetgroup={jsonGroup}> </span></td>);
